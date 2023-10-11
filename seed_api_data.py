@@ -5,7 +5,7 @@ from sqlalchemy import create_engine
 
 old_print = print
 def timestamped_print(*args, **kwargs):
-  old_print(datetime.now(), *args, **kwargs)
+  old_print(datetime.datetime.now(), *args, **kwargs)
 print = timestamped_print
 
 def postgres_upsert(table, conn, keys, data_iter):
