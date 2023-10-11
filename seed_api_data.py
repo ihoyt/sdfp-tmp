@@ -47,7 +47,7 @@ def main():
     end_date = pd.to_datetime(datetime.datetime.strptime(os.environ.get('END_DATE'), "%Y-%m-%d %H:%M:%S"))
     start_date = end_date - datetime.timedelta(days=60)
 
-    query = "select * from external_api_data WHERE date >= '{start_date}' AND date <= '{end_date}'"
+    query = f"select * from external_api_data WHERE date >= '{start_date}' AND date <= '{end_date}'"
     data = pd.read_sql_query(query, engine).sort_values(['date']).drop_duplicates(subset=['date'])
     data = data.round({'value': 3})
     data.set_index(['id', 'date', 'api_name', 'type'], inplace=True)
