@@ -44,8 +44,8 @@ def main():
 
     engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
-    end_date = pd.to_datetime(datetime.datetime.strptime(os.environ.get('END_DATE'), "%Y-%m-%d %H:%M:%S"))
-    start_date = end_date - datetime.timedelta(days=30)
+    # end_date = pd.to_datetime(datetime.datetime.strptime(os.environ.get('END_DATE'), "%Y-%m-%d %H:%M:%S"))
+    # start_date = end_date - datetime.timedelta(days=30)
 
     # end_date = pd.read_sql_query("SELECT min(date) as date FROM api_data", engine)
     # if end_date.iloc[0]["date"] is None:
@@ -55,16 +55,16 @@ def main():
     # start_date = end_date.at[0, 'date'] - datetime.timedelta(days=60)
     # end_date = end_date.at[0, 'date']
 
-    print(start_date)
-    print(end_date)
-    query = f"select * from external_api_data WHERE date >= '{start_date}' AND date <= '{end_date}'"
-    data = pd.read_sql_query(query, engine).sort_values(['date']).drop_duplicates(subset=['date'])
-    data = data.round({'value': 3})
-    data.set_index(['id', 'date', 'api_name', 'type'], inplace=True)
-    data.to_sql("api_data", engine, if_exists = "append", method=postgres_upsert)
-    print("DATA COPIED")
+    # print(start_date)
+    # print(end_date)
+    # query = f"select * from external_api_data WHERE date >= '{start_date}' AND date <= '{end_date}'"
+    # data = pd.read_sql_query(query, engine).sort_values(['date']).drop_duplicates(subset=['date'])
+    # data = data.round({'value': 3})
+    # data.set_index(['id', 'date', 'api_name', 'type'], inplace=True)
+    # data.to_sql("api_data", engine, if_exists = "append", method=postgres_upsert)
+    # print("DATA COPIED")
 
-    return
+    # return
 
 
     end_date = pd.read_sql_query("SELECT min(date) as date FROM api_data", engine)
