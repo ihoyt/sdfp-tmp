@@ -55,6 +55,8 @@ def main():
     # start_date = end_date.at[0, 'date'] - datetime.timedelta(days=60)
     # end_date = end_date.at[0, 'date']
 
+    print(start_date)
+    print(end_date)
     query = f"select * from external_api_data WHERE date >= '{start_date}' AND date <= '{end_date}'"
     data = pd.read_sql_query(query, engine).sort_values(['date']).drop_duplicates(subset=['date'])
     data = data.round({'value': 3})
