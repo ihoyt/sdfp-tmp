@@ -70,13 +70,15 @@ def main():
     
     start_date = end_date.at[0, 'date'] - datetime.timedelta(days=60)
     end_date = end_date.at[0, 'date']
-    query = f"select date, atm_pressure as value from sensor_water_depth where place='Carolina Beach, North Carolina' and date < '{start_date}' and date >= '{end_date}'"
+    print(start_date)
+    print(end_date)
+    query = f"select date, atm_pressure as value from sensor_water_depth where place='Carolina Beach, North Carolina' and date >= '{start_date}' and date < '{end_date}'"
     # query = "select date, atm_pressure as value from sensor_water_depth where place='Carolina Beach, North Carolina' and date < '2022-12-17 17:05:00'"
-    # query = "select date, sensor_pressure as value from sensor_water_depth where atm_data_src='FIMAN' and atm_station_id='30046' and date < '2022-12-01 17:05:00'"
     data = pd.read_sql_query(query, engine).sort_values(['date']).drop_duplicates(subset=['date'])
     # print(data)
     # data.set_index(['date']);
     data = data.resample('3T', on='date').mean().dropna()
+    # data = data.resample('3T').mean().dropna()
     data.reset_index(inplace=True)
     # print(data)
     data['id'] = 30046
