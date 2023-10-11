@@ -1,5 +1,6 @@
 import os
 from datetime import datetime
+from datetime import timedelta
 import pandas as pd
 from sqlalchemy import create_engine
 
@@ -44,13 +45,17 @@ def main():
 
     engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
-    query = "select * from external_api_data"
+    end_date = pd.to_datetime(datetime.datetime.strptime(os.environ.get('END_DATE'), "%Y-%m-%d %H:%M:%S"))
+    start_date = end_date - datetime.timedelta(days=60)
+
+    query = "select * from external_api_data WHERE date >= '{start_date}' AND date <= '{end_date}'"
     data = pd.read_sql_query(query, engine).sort_values(['date']).drop_duplicates(subset=['date'])
     data = data.round({'value': 3})
     data.set_index(['id', 'date', 'api_name', 'type'], inplace=True)
     data.to_sql("api_data", engine, if_exists = "append", method=postgres_upsert)
     print("DATA COPIED")
 
+    return
     query = "select date, atm_pressure as value from sensor_water_depth where place='Carolina Beach, North Carolina' and date < '2022-12-17 17:05:00'"
     # query = "select date, sensor_pressure as value from sensor_water_depth where atm_data_src='FIMAN' and atm_station_id='30046' and date < '2022-12-01 17:05:00'"
     data = pd.read_sql_query(query, engine).sort_values(['date']).drop_duplicates(subset=['date'])
